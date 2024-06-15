@@ -4,6 +4,12 @@ package org.codewithcaleb.springsecuritymarathon.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 //Configuration classes are where i override,the autoconfiguration settings for my dependencies
@@ -40,17 +46,40 @@ public class SecurityConfig {
      *
      *  We should be careful when searching for answers in the internet,at times, we do not find real answers,
      *  but rather find, workarounds.
+     *
+     *  http.httpBasic().and().formLogin(); (adds a log in form before your routes
      **/
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         //authentication
         http.httpBasic().and().formLogin();
 
-
         //authorization
         http.authorizeHttpRequests()
                 .anyRequest().authenticated();
 
         return http.build();
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService(){
+
+        // i am adding my user in the userDetails Service
+        //so that i returns my user when the provider is calling it
+        UserDetails user = User.builder()
+                .username("caleb")
+                .password("password")
+                .authorities("read") //used for authorization
+                .build();
+
+        //i am not fetching my user from the DB and i need to remember them
+       return new InMemoryUserDetailsManager(user);
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        //not recommended in production,
+        //i should use something like bcrypt
+        return NoOpPasswordEncoder.getInstance();
     }
 }

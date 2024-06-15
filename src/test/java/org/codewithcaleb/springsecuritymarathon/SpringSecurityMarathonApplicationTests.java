@@ -15,8 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class SpringSecurityMarathonApplicationTests {
-
-   //we use mockMvc to perform integration tests to controllers(Because we assert statuses)
+   //we use mockMvc to perform integration tests to controllers (Because we assert statuses)
     @Autowired
     private MockMvc mockMvc;
 
